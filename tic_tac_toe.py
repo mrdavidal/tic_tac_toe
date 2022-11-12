@@ -1,6 +1,8 @@
-#rom random import randrange
+import random
+from random import randrange
 counter = 0
 board = [[row for row in range(3)]for collumn in range(3)]
+
 for i in range(len(board)):
     for j in range(len(board[i])):
         board[i][j] = counter + 1
@@ -74,12 +76,15 @@ def display_board(board):
     print(side_midle7 + side_midle8 + side_midle9)
     print(side * 4)
     print("+-------", up, up, sep="+",end="+\n")
+
 def enter_move(board):
     # The function accepts the board's current status, asks the user about their move,
     # checks the input, and updates the board according to the user's decision.
+    enter = input("Enter your move:")
     try:
-        move = int(input("Enter your move:"))
-    except: print("You havent't entered a valid move")
+        move = int(enter)
+    except:
+        print("You havent't entered a valid move")
     if move > 0 and move < 10:
         move = str(move)
     else: print("You haven't entered a valid move")
@@ -90,17 +95,58 @@ def enter_move(board):
                 board[i].insert(j, "0")
     return board
 
-display_board(board)
-display_board(enter_move(board))
-#def make_list_of_free_fields(board):
+def make_list_of_free_fields(board):
     # The function browses the board and builds a list of all the free squares;
     # the list consists of tuples, while each tuple is a pair of row and column numbers.
+    free_field = []
+    for i in range(len(board)):
+        for j in range(len(board[i])):
+            if board[i][j] == "x" or board[i][j] == "0":
+                continue
+            else:
+                row_collumn = i, j
+                free_field.append(row_collumn)
+    return free_field
 
-
-#def victory_for(board, sign):
+def victory_for(board, sign):
     # The function analyzes the board's status in order to check if
     # the player using 'O's or 'X's has won the game
+    for i in range(len(board)):
+        for j in range(len(board[i])):
+            if j == 0 and board[i][j] == sign and board[i][j + 1] == sign and board[i][j + 2] == sign:
+                return 1
+            elif i == 0 and board[i][j] == sign and board[i + 1][j] == sign and board[i + 2][j] == sign:
+                return 1
+            elif i == 0 and j == 0 and board[i][j] == sign and board[i + 1][j + 1] == sign and board[i + 2][j + 2] == sign:
+                return 1
+            elif i == 0 and j == 0 and board[i][j + 2] == sign and board[i + 1][j + 1] == sign and board[i + 2][j] == sign:
+                return 1
+    return 0
 
-
-#def draw_move(board):
+def draw_move(board):
     # The function draws the computer's move and updates the board.
+    nr = random.randrange(1,10)
+    counter = 1
+    t_board = make_list_of_free_fields(board)
+    if len(t_board) == 9:
+        board[1][1] = "x"
+        return board
+    else:
+        while counter > 0:
+            for i in range(len(board)):
+                for j in range(len(board[i])):
+                    if board[i][j] == str(nr):
+                        del board[i][j]
+                        board[i].insert(j, "x")
+                        counter = 0
+            nr = random.randrange(1,10)
+
+    return board
+display_board(draw_move(board))
+while victory_for(board, "0") == 0 and victory_for(board, "x") == 0:
+    if victory_for(board, "0") == 0 and victory_for(board, "x") == 0:
+        if len(make_list_of_free_fields(board)) < 1:
+            break
+        display_board(enter_move(board))
+    if victory_for(board, "0") == 0 and victory_for(board, "x") == 0:
+        display_board(draw_move(board))
