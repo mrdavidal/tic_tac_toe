@@ -92,15 +92,14 @@ def enter_move(board):
                 print("You haven't entered a valid move")
         except:
             print("You havent't entered a valid move")
-    z = 0
-    k = 0
+    ck = 0
     for i in range(len(board)):
         for j in range(len(board[i])):
             if move == str(board[i][j]):
-                k = 1
+                ck = 1
                 del board[i][j]
                 board[i].insert(j, "0")
-    if k == 0:
+    if ck == 0:
         print("You havent't entered a valid move")
         enter_move(board)
     return board
