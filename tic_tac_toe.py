@@ -80,19 +80,31 @@ def display_board(board):
 def enter_move(board):
     # The function accepts the board's current status, asks the user about their move,
     # checks the input, and updates the board according to the user's decision.
-    enter = input("Enter your move:")
-    try:
-        move = int(enter)
-    except:
-        print("You havent't entered a valid move")
-    if move > 0 and move < 10:
-        move = str(move)
-    else: print("You haven't entered a valid move")
+    n = 1
+    while n != 0:
+        try:
+            enter = input("Enter your move:")
+            move = int(enter)
+            if move > 0 and move < 10:
+                move = str(move)
+                n = 0
+            else:
+                print("You haven't entered a valid move")
+        except:
+            print("You havent't entered a valid move")
+    z = 0
+    k = 0
     for i in range(len(board)):
         for j in range(len(board[i])):
-            if move == str(board[i][j]):
+            if  board[i][j] != move:
+                z = 1
+            elif move == str(board[i][j]):
+                k = 1
                 del board[i][j]
                 board[i].insert(j, "0")
+    if z == 1 and k == 0:
+        print("You havent't entered a valid move")
+        enter_move(board)
     return board
 
 def make_list_of_free_fields(board):
@@ -150,3 +162,10 @@ while victory_for(board, "0") == 0 and victory_for(board, "x") == 0:
         display_board(enter_move(board))
     if victory_for(board, "0") == 0 and victory_for(board, "x") == 0:
         display_board(draw_move(board))
+
+if victory_for(board, "0") == 1:
+    print("You win!")
+elif victory_for(board, "x") == 1:
+    print("You lost!")
+else:
+    print("It's a draw!")
